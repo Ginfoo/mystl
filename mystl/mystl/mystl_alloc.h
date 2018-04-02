@@ -14,9 +14,9 @@
 //定义宏：抛出内存分配异常
 #ifndef _THROW_BAD_ALLOC
 #  if defined(__STL_NO_BAD_ALLOC)||!defined(__STL_USE_EXCEPTIONS)
-#      include<iostream>
-#      include<cstdlib>
-#      define _THROW_BAD_ALLOC std::cerr<<"out of memory\n";exit(1)
+#      include<stdio.h>
+#      include<stdlib.h>
+#      define _THROW_BAD_ALLOC fprintf(stderr,"out of memory");exit(1)
 #  else 
 #      include<new>
 #      define _THROW_BAD_ALLOC throw std::bad_alloc()
@@ -24,50 +24,36 @@
 #endif
 
 
-class malloc_first_template {
+class malloc_i{
 private:
+	static void(*oom_malloc_handler)();
 	static void* oom_malloc(const size_t);
 	static void* oom_realloc(void*, const size_t);
 public:
-	//分配内存空间
-	static void* allocate(const size_t sz)
-	{
-		void* result = malloc(sz);
-		if(result==nullptr)
-		{
-			result = oom_malloc(sz);
-		}
-		return result;
-	}
-	//销毁内存空间
-	static void deallocate(void* ptr,size_t sz)
-	{
-		free(ptr);
-	}
-	//重新分配内存空间
-	static void* reallocate(void* ptr,size_t old_sz,const size_t new_sz)
-	{
-		void* result = realloc(ptr, new_sz);
-		if(result==nullptr)
-		{
-			result = oom_realloc(ptr, new_sz);
-		}
-		return result;
-	}
+	static void* allocate(const size_t sz);
+	static void deallocate(void* ptr, size_t sz);
+	static void* reallocate(void* ptr, size_t old_sz, const size_t new_sz);
+	static void(*set_oom_malloc_handler(void(*f)()))();
 };
-
-//内存溢出
-inline void* malloc_first_template::oom_malloc(const size_t)
-{
-	void(*my_malloc_handler)();
-	void *result;
-	while (true)
-	{
-		my_malloc_handler=_;
-		if(nullptr==my_malloc_handler)
-		{
-			_THROW_BAD_ALLOC;
-		}
+void(*malloc_i::oom_malloc_handler)() = nullptr;
+void* malloc_i::oom_malloc(const size_t _Size) {
+	void(*cur_oom_malloc_handler)();
+	void* result;
+	for (;;) {
+		cur_oom_malloc_handler = oom_malloc_handler;
+		if (nullptr == cur_oom_malloc_handler) { _THROW_BAD_ALLOC; }
+		(*cur_oom_malloc_handler)();
+		result = malloc(_Size);
+		if (result)return result;
 	}
 }
-
+void* malloc_i::oom_realloc(void* _Block, const size_t _Size) {
+	void(*cur_oom_malloc_handler)();
+	void *result;
+	for (;;) {
+		cur_oom_malloc_handler = oom_malloc_handler;
+		if (nullptr == cur_oom_malloc_handler) { _THROW_BAD_ALLOC; }
+		(*cur_oom_malloc_handler)();
+		result = realloc(_Block, _Size);
+	}
+}
