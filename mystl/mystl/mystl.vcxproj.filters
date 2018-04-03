@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="mystl_alloc.h">
+    <ClInclude Include="myStl_malloc_i.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
