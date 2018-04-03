@@ -18,5 +18,8 @@
     <ClInclude Include="malloc_i.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="malloc_ii.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
