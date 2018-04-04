@@ -30,10 +30,22 @@ public:
 
 const int malloc_ii::_NFREELISTS;
 
+inline void* malloc_ii::refill(size_t _Size)
+{
+	void *res = nullptr;
+	int n_objs = 20;
+	char* chunk = chunk_alloc(_Size, n_objs);
+	obj* volatile *cur_free_list;
+	obj* result;
+	obj* cur_obj;
+	obj* next_obj;
+	return res;
+}
+
 inline void* malloc_ii::allocate(const size_t _Size)
 {
 	void* _res = nullptr;
-	if (_Size > (size_t)_MAX_BYTES)
+	if (_Size > static_cast<size_t>(_MAX_BYTES))
 	{
 		_res = malloc_i::allocate(_Size);
 	}
