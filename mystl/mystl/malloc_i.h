@@ -1,16 +1,6 @@
 #pragma once
 #include <new>
 #include <cstdlib>
-/**
-   学习SGI STL 标准
-   基于SGI STL 
-**/
-
-/*
-   mystl_alloc.h 负责内存空间的分配与释放
-*/
-
-//定义宏：抛出内存分配异常
 #ifndef _THROW_BAD_ALLOC
 #if defined(__STL_NO_BAD_ALLOC) || !defined(__STL_USE_EXCEPTIONS)
 #include <cstdio>
@@ -37,7 +27,9 @@ class malloc_i
 	static void *reallocate(void *, size_t, const size_t);
 	static void (*set_oom_malloc_handler(void (*_new_handler)()))();
 };
+
 void (*malloc_i::oom_malloc_handler)() = nullptr;
+
 inline void *malloc_i::oom_malloc(const size_t _Size)
 {
 	void (*cur_oom_malloc_handler)() = nullptr;
@@ -55,6 +47,7 @@ inline void *malloc_i::oom_malloc(const size_t _Size)
 			return result;
 	}
 }
+
 inline void *malloc_i::oom_realloc(void *_Block, const size_t _Size)
 {
 	void (*cur_oom_malloc_handler)() = nullptr;
@@ -70,6 +63,7 @@ inline void *malloc_i::oom_realloc(void *_Block, const size_t _Size)
 		result = realloc(_Block, _Size);
 	}
 }
+
 inline void *malloc_i::allocate(const size_t _Size)
 {
 	void *result = malloc(_Size);
@@ -79,10 +73,12 @@ inline void *malloc_i::allocate(const size_t _Size)
 	}
 	return result;
 }
+
 inline void malloc_i::deallocate(void *_Block, size_t _Size)
 {
 	free(_Block);
 }
+
 inline void *malloc_i::reallocate(void *_Block, size_t _old_Size, size_t _new_Size)
 {
 	void *result = realloc(_Block, _new_Size);
@@ -92,6 +88,7 @@ inline void *malloc_i::reallocate(void *_Block, size_t _old_Size, size_t _new_Si
 	}
 	return result;
 }
+
 inline void (*malloc_i::set_oom_malloc_handler(void (*_new_handler)()))()
 {
 	void (*_old_handler)() = oom_malloc_handler;
