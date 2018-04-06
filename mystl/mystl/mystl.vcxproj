@@ -119,6 +119,9 @@
     <ClInclude Include="malloc_i.h" />
     <ClInclude Include="malloc_ii.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
