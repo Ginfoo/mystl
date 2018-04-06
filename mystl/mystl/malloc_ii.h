@@ -34,6 +34,7 @@ private:
 	//堆大小,记录总共获得了多少字节
 	static size_t heap_size;
 
+
 public:
 
 	static void* allocate(const size_t _Size);
